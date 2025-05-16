@@ -31,16 +31,12 @@ let payment = document.querySelector('#payment');
 payment.value = 'credit-card';
 
 
-
-
 //Displays credit card form section only during page load
 const bitCoinPaypalMethods = document.querySelectorAll('#paypal, #bitcoin');
 
 for (let i = 0; i < bitCoinPaypalMethods.length; i++) {
     bitCoinPaypalMethods[i].style.display = 'none';
 }
-
-
 
 
 const creditCardNum = document.getElementById('cc-num');
@@ -50,7 +46,6 @@ const creditCVV = document.getElementById('cvv');
 const activityDateTime = document.querySelectorAll('[data-day-and-time]');
 
 const form = document.querySelector('form');
-
 
 
 //input validator regex check
@@ -179,6 +174,7 @@ form.addEventListener('submit', (e)=> {
         } 
     }
 
+    //function call to check if the data is valid for submission
     validator(isNameValid(), nameInput);
     validator(isEmailValid(), email);
     validator(cardNumberValid(), creditCardNum);
