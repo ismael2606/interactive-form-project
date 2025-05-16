@@ -55,7 +55,7 @@ const cardNumberValid = () => /^\d{13,16}$/.test(creditCardNum.value);
 const isZipValid = () => /^\d{5}$/.test(creditZipCode.value);
 const isCodeValid = () => /^\d{3}$/.test(creditCVV.value);
 
-// validator function for form submission
+// validator function to check if form data is valid or not
 function validator(isInputValid, element) {
     if (!isInputValid) {
         element.parentElement.classList.remove('valid');
@@ -174,7 +174,7 @@ form.addEventListener('submit', (e)=> {
         } 
     }
 
-    //function call to check if the data is valid for submission
+    //function call to check if the data is valid or not to apply the proper styling.
     validator(isNameValid(), nameInput);
     validator(isEmailValid(), email);
     validator(cardNumberValid(), creditCardNum);
