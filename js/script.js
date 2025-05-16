@@ -32,10 +32,36 @@ const creditCardNum = document.getElementById('cc-num');
 const creditZipCode = document.getElementById('zip');
 const creditCVV = document.getElementById('cvv');
 
+const activityDateTime = document.querySelectorAll('[data-day-and-time]');
+console.log(activityDateTime);
+
+
+
+
 
 const form = document.querySelector('form');
 
 
+
+//input validator regex check
+const isNameValid = () => /\w*\w$/.test(nameInput.value);
+const isEmailValid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
+const cardNumberValid = () => /^\d{13,16}$/.test(creditCardNum.value);
+const isZipValid = () => /^\d{5}$/.test(creditZipCode.value);
+const isCodeValid = () => /^\d{3}$/.test(creditCVV.value);
+
+// validator function for form submission
+function validator(isInputValid, element) {
+    if (!isInputValid) {
+        element.parentElement.classList.remove('valid');
+        element.parentElement.classList.add('not-valid');
+        element.nextElementSibling.style.display = "inherit";
+    } else {
+        element.parentElement.classList.remove('not-valid');
+        element.parentElement.classList.add('valid');
+        element.nextElementSibling.style.display = "none";
+    }
+}
 
 
 // Job Role section
@@ -70,8 +96,10 @@ activities.addEventListener('change', (e) => {
     let costPerActivity = 0;
     let totalCost = document.getElementById('activities-cost');
 
+
     for (let i = 0; i < checkboxes.length; i++) {
         const activityCost = parseInt(checkboxes[i].getAttribute('data-cost'));
+
 
         if(checkboxes[i].checked) {
             totalCost.innerHTML = `Total: $${costPerActivity += activityCost}`;
@@ -80,6 +108,27 @@ activities.addEventListener('change', (e) => {
         }
 
     }
+
+    //Resolves conflict activity times [Exceeds task #1]
+    activityDateTime.forEach(activity => {
+        const clickedActivity = e.target.getAttribute('data-day-and-time');
+        const activityTime = activity.getAttribute('data-day-and-time');
+
+        console.log(activity.parentElement, "mmg");
+
+        if(e.target !== activity && clickedActivity === activityTime) {
+            if (e.target.checked) {
+                activity.disabled = true;
+                activity.parentElement.classList.add('disabled');
+            }
+            else {
+                activity.disabled = false;
+                activity.parentElement.classList.remove('disabled');
+            }
+        }
+    })
+
+        
 })
 
 //Payment info section
@@ -98,14 +147,6 @@ payment.addEventListener('change', (e) => {
 
 
 form.addEventListener('submit', (e)=> {
-
-    //input validator regex check
-    const isNameValid = () => /\w*\w$/.test(nameInput.value);
-    const isEmailValid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
-    const cardNumberValid = () => /^\d{13,16}$/.test(creditCardNum.value);
-    const isZipValid = () => /^\d{5}$/.test(creditZipCode.value);
-    const isCodeValid = () => /^\d{3}$/.test(creditCVV.value);
-
 
     //name and email validator
     if (!isNameValid() || !isEmailValid()) {
@@ -133,19 +174,6 @@ form.addEventListener('submit', (e)=> {
         } 
     }
 
-    // validator function for form submission
-    function validator(isInputValid, element) {
-        if (!isInputValid) {
-            element.parentElement.classList.remove('valid');
-            element.parentElement.classList.add('not-valid');
-            element.nextElementSibling.style.display = "inherit";
-        } else {
-            element.parentElement.classList.remove('not-valid');
-            element.parentElement.classList.add('valid');
-            element.nextElementSibling.style.display = "none";
-        }
-    }
-
     validator(isNameValid(), nameInput);
     validator(isEmailValid(), email);
     validator(cardNumberValid(), creditCardNum);
@@ -166,3 +194,12 @@ checkboxes.forEach(checkbox => {
     })
 })
 
+//Real time error-message [Exceeds task #2]
+
+nameInput.addEventListener('keyup', (e) => {
+    // console.log(e.target.value);
+    let userInput = e.target.value;
+    if(nameInput.value.includes(userInput)) {
+        validator(isNameValid(), nameInput);
+    }
+})
