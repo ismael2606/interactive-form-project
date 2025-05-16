@@ -33,7 +33,6 @@ const creditZipCode = document.getElementById('zip');
 const creditCVV = document.getElementById('cvv');
 
 const activityDateTime = document.querySelectorAll('[data-day-and-time]');
-console.log(activityDateTime);
 
 
 
@@ -100,21 +99,17 @@ activities.addEventListener('change', (e) => {
     for (let i = 0; i < checkboxes.length; i++) {
         const activityCost = parseInt(checkboxes[i].getAttribute('data-cost'));
 
-
         if(checkboxes[i].checked) {
             totalCost.innerHTML = `Total: $${costPerActivity += activityCost}`;
         } else {
             totalCost.innerHTML = `Total: $${costPerActivity}`
         }
-
     }
 
     //Resolves conflict activity times [Exceeds task #1]
     activityDateTime.forEach(activity => {
         const clickedActivity = e.target.getAttribute('data-day-and-time');
         const activityTime = activity.getAttribute('data-day-and-time');
-
-        console.log(activity.parentElement, "mmg");
 
         if(e.target !== activity && clickedActivity === activityTime) {
             if (e.target.checked) {
@@ -151,7 +146,6 @@ form.addEventListener('submit', (e)=> {
     //name and email validator
     if (!isNameValid() || !isEmailValid()) {
         e.preventDefault();
-        console.log('try again with checking name, or email')
     } 
 
     //ensures at least 1 activity is selected to submit
@@ -170,7 +164,6 @@ form.addEventListener('submit', (e)=> {
     if (payment.value == 'credit-card') {
         if(!cardNumberValid() || !isZipValid() || !isCodeValid()) {
             e.preventDefault();
-            console.log('try again');
         } 
     }
 
@@ -194,12 +187,35 @@ checkboxes.forEach(checkbox => {
     })
 })
 
-//Real time error-message [Exceeds task #2]
 
-nameInput.addEventListener('keyup', (e) => {
-    // console.log(e.target.value);
+//Real time error-message [Exceeds task #2]
+function realTimeErrorMessage(inputElement) {
+    inputElement.addEventListener('keyup', (e) => {
+        let userInput = e.target.value;
+
+        if (userInput.includes(inputElement.value)) {
+            validator(isNameValid(), nameInput);
+        }
+    })
+}
+
+//Conditional error message [Exceeds task #3]
+
+creditCardNum.addEventListener('keyup', (e) => {
+    const numbersOnly = () => /^\d+$/.test(creditCardNum.value);
+
     let userInput = e.target.value;
-    if(nameInput.value.includes(userInput)) {
-        validator(isNameValid(), nameInput);
+    if(!numbersOnly()) {
+        creditCardNum.nextElementSibling.innerHTML = 'Card number must contain only digits — no spaces or special characters.';
+        creditCardNum.nextElementSibling.style.display = 'inherit';
+    } else {
+        creditCardNum.nextElementSibling.style.display = 'none';
+    }
+
+    if(e.target.value.length > 16) {
+        creditCardNum.nextElementSibling.innerHTML = 'Number provided is more than 16 digits, it must 13-16  digits or less.';
+        creditCardNum.nextElementSibling.style.display = 'block';
     }
 })
+
+realTimeErrorMessage(nameInput)
