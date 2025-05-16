@@ -26,7 +26,7 @@ const ShirtColorSelect = document.getElementById('color');
 const activities = document.getElementById('activities');
 
 
-//Select credit card option during page load
+//Selects credit card option during page load
 let payment = document.querySelector('#payment');
 payment.value = 'credit-card';
 
