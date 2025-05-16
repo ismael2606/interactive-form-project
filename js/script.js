@@ -1,26 +1,28 @@
 const nameInput = document.getElementById('name');
 nameInput.focus(); // Focus name field by default
 
-
 const email = document.getElementById('email');
 
-const OtherRoleField = document.getElementById('other-job-role')
-OtherRoleField.hidden = true; //Hide other role text field by default
-
-
 const jobRolesSelect = document.getElementById('title');
+const OtherRoleField = document.getElementById('other-job-role')
+OtherRoleField.hidden = true; //Hide "other role" text field when the page loads 
 
-//Activities selection
+
+//Activities checkboxes
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-
+// "Color" field is disabled when the page loads.
 const colorElement = document.getElementById('color')
 colorElement.disabled = true;
 
+
+// T-shirt section variables
 const shirtDesignSelect = document.getElementById('design');
 
 const ShirtColorSelect = document.getElementById('color');
 
+
+//Activities section selection
 const activities = document.getElementById('activities');
 
 
@@ -28,15 +30,24 @@ const activities = document.getElementById('activities');
 let payment = document.querySelector('#payment');
 payment.value = 'credit-card';
 
+
+
+
+//Displays credit card form section only during page load
+const bitCoinPaypalMethods = document.querySelectorAll('#paypal, #bitcoin');
+
+for (let i = 0; i < bitCoinPaypalMethods.length; i++) {
+    bitCoinPaypalMethods[i].style.display = 'none';
+}
+
+
+
+
 const creditCardNum = document.getElementById('cc-num');
 const creditZipCode = document.getElementById('zip');
 const creditCVV = document.getElementById('cvv');
 
 const activityDateTime = document.querySelectorAll('[data-day-and-time]');
-
-
-
-
 
 const form = document.querySelector('form');
 
@@ -128,14 +139,15 @@ activities.addEventListener('change', (e) => {
 
 //Payment info section
 payment.addEventListener('change', (e) => {
+
     const paymentformSection = document.querySelectorAll('#credit-card, #paypal, #bitcoin');
 
     for (let i = 0; i < paymentformSection.length; i++ ) {
         if (e.target.value == paymentformSection[i].getAttribute('id')) {
-            paymentformSection[i].hidden = false;
+            paymentformSection[i].style.display = 'inherit';
         }
          else {
-            paymentformSection[i].hidden = true;
+            paymentformSection[i].style.display = 'none';
         }
     }  
 })
@@ -200,22 +212,28 @@ function realTimeErrorMessage(inputElement) {
 }
 
 //Conditional error message [Exceeds task #3]
+function conditionalErrorMessage(inputElement) {
+    inputElement.addEventListener('keyup', (e) => {
+        const numbersOnly = () => /^\d+$/.test(inputElement.value);
+    
+        let userInput = e.target.value;
+        if(!numbersOnly() && userInput !== "") {
+            inputElement.nextElementSibling.innerHTML = 'Card number must contain only digits — no spaces or special characters.';
+            inputElement.nextElementSibling.style.display = 'inherit';
+        } else {
+            inputElement.nextElementSibling.style.display = 'none';
+        }
+    
+        if(userInput.length > 16) {
+            inputElement.nextElementSibling.innerHTML = 'Card number provided is more than 16 digits, it must 13-16  digits or less.';
+            inputElement.nextElementSibling.style.display = 'inherit';
+        }
+    })
 
-creditCardNum.addEventListener('keyup', (e) => {
-    const numbersOnly = () => /^\d+$/.test(creditCardNum.value);
-
-    let userInput = e.target.value;
-    if(!numbersOnly()) {
-        creditCardNum.nextElementSibling.innerHTML = 'Card number must contain only digits — no spaces or special characters.';
-        creditCardNum.nextElementSibling.style.display = 'inherit';
-    } else {
-        creditCardNum.nextElementSibling.style.display = 'none';
-    }
-
-    if(e.target.value.length > 16) {
-        creditCardNum.nextElementSibling.innerHTML = 'Number provided is more than 16 digits, it must 13-16  digits or less.';
-        creditCardNum.nextElementSibling.style.display = 'block';
-    }
-})
+}
 
 realTimeErrorMessage(nameInput)
+conditionalErrorMessage(creditCardNum)
+
+
+
