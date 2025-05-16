@@ -162,9 +162,18 @@ form.addEventListener('submit', (e)=> {
             activitesSelected.push(checkboxes[i])
         }
     }
-
+    
+  
     if (activitesSelected.length === 0) {
+        //display error message if an activity is not selected
+        activities.lastElementChild.style.display = 'inherit';
+        activities.classList.add('not-valid');
         e.preventDefault();
+    } else {
+        activities.lastElementChild.style.display = 'none';
+        activities.classList.remove('not-valid');
+        activities.classList.add('valid');
+
     }
     
     //credit card info validator
